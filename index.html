@@ -307,7 +307,7 @@
                 0 0 40px rgba(255, 0, 64, 0.15),
                 inset 0 -1px 0 rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 0, 64, 0.4);
-            animation: card-float 8s ease-in-out infinite;
+            /* REMOÇÃO DA ANIMAÇÃO DE FLUTUAÇÃO: animation: card-float 8s ease-in-out infinite; */
             text-align: center;
             position: relative;
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -323,10 +323,12 @@
             border-color: rgba(255, 0, 64, 0.6);
         }
 
+        /* REMOÇÃO DO KEYFRAMES
         @keyframes card-float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-8px); }
         }
+        */
 
         .love-card::before {
             content: '';
@@ -1132,6 +1134,14 @@ setInterval(atualizarContador, 1000);
         function showSurprise() {
             // VERIFICAÇÃO SE O BOTÃO ESTÁ BLOQUEADO
             if (isButtonBlocked) {
+                // Adiciona um pequeno shake no botão bloqueado para feedback visual
+                const surpriseBtn = document.querySelector('.surprise-btn');
+                surpriseBtn.classList.remove('btn-pulse'); // remove o pulso
+                surpriseBtn.classList.add('incorrect-shake');
+                setTimeout(() => {
+                    surpriseBtn.classList.remove('incorrect-shake');
+                    surpriseBtn.classList.add('btn-pulse'); // devolve o pulso
+                }, 500);
                 return;
             }
 
@@ -1140,11 +1150,11 @@ setInterval(atualizarContador, 1000);
             const surpriseBtn = document.querySelector('.surprise-btn');
             surpriseBtn.classList.add('disabled');
             
-            // DESBLOQUEIA O BOTÃO APÓS 5.5 SEGUNDOS
+            // DESBLOQUEIA O BOTÃO APÓS 3 SEGUNDOS (MENOS QUE ANTES PARA MAIOR FLUIDEZ)
             setTimeout(() => {
                 isButtonBlocked = false;
                 surpriseBtn.classList.remove('disabled');
-            }, 5500);
+            }, 3000); // Alterado de 5500ms para 3000ms
 
             const message = document.getElementById('specialMessage');
             message.classList.add('show');
@@ -1157,21 +1167,21 @@ setInterval(atualizarContador, 1000);
 
             // Vibração
             if (navigator.vibrate) {
-                navigator.vibrate([200, 100, 200, 100, 300]);
+                navigator.vibrate([100, 50, 100, 50, 200]); // Vibração mais rápida
             }
 
-            // Mudança temporária da cor de fundo
+            // Mudança temporária da cor de fundo (tempo reduzido)
             document.body.style.background = 'linear-gradient(135deg, #ff0040, #990026, #000000, #ff1744)';
             document.body.style.backgroundSize = '400% 400%';
-            document.body.style.animation = 'gradient-shift 2s ease infinite';
+            document.body.style.animation = 'gradient-shift 1.5s ease infinite';
 
             setTimeout(() => {
                 document.body.style.background = 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a0a0a 100%)';
                 document.body.style.animation = '';
-            }, 4000);
+            }, 3000); // Alterado de 4000ms para 3000ms
 
-            // Criar mais partículas especiais
-            for (let i = 0; i < 50; i++) {
+            // Criar mais partículas especiais (quantidade reduzida)
+            for (let i = 0; i < 30; i++) { // Alterado de 50 para 30
                 setTimeout(() => createParticle(), i * 50);
             }
         }
@@ -1207,15 +1217,15 @@ setInterval(atualizarContador, 1000);
                 background-clip: text;
                 z-index: 9999;
                 pointer-events: none;
-                animation: te-amo-main 4s ease-out forwards;
+                animation: te-amo-main 3s ease-out forwards;
                 text-shadow: 0 0 30px rgba(255, 0, 64, 0.8);
                 filter: drop-shadow(0 0 20px rgba(255, 0, 64, 1));
             `;
             document.body.appendChild(mainTeAmo);
-            setTimeout(() => mainTeAmo.remove(), 4000);
+            setTimeout(() => mainTeAmo.remove(), 3000);
 
-            // Múltiplos "TE AMO" flutuantes
-            for (let i = 0; i < 8; i++) {
+            // Múltiplos "TE AMO" flutuantes (Quantidade reduzida de 8 para 5)
+            for (let i = 0; i < 5; i++) { 
                 setTimeout(() => {
                     const teAmo = document.createElement('div');
                     const randomText = teAmoTexts[Math.floor(Math.random() * teAmoTexts.length)];
@@ -1233,17 +1243,17 @@ setInterval(atualizarContador, 1000);
                         color: ${Math.random() > 0.5 ? '#ff0040' : '#ffd700'};
                         z-index: 9998;
                         pointer-events: none;
-                        animation: te-amo-float 3s ease-out forwards;
+                        animation: te-amo-float 2.5s ease-out forwards;
                         text-shadow: 0 0 15px rgba(255, 0, 64, 0.8);
                         filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
                     `;
                     document.body.appendChild(teAmo);
-                    setTimeout(() => teAmo.remove(), 3000);
-                }, i * 200);
+                    setTimeout(() => teAmo.remove(), 2500);
+                }, i * 150);
             }
 
-            // Chuva de "TE AMO" pequenos
-            for (let i = 0; i < 15; i++) {
+            // Chuva de "TE AMO" pequenos (Quantidade reduzida de 15 para 10)
+            for (let i = 0; i < 10; i++) { 
                 setTimeout(() => {
                     const miniTeAmo = document.createElement('div');
                     miniTeAmo.innerHTML = '💖 TE AMO';
@@ -1255,12 +1265,12 @@ setInterval(atualizarContador, 1000);
                         color: #ff0040;
                         z-index: 9997;
                         pointer-events: none;
-                        animation: te-amo-rain ${Math.random() * 3 + 2}s linear forwards;
+                        animation: te-amo-rain ${Math.random() * 2 + 1.5}s linear forwards;
                         text-shadow: 0 0 10px rgba(255, 0, 64, 0.6);
                     `;
                     document.body.appendChild(miniTeAmo);
-                    setTimeout(() => miniTeAmo.remove(), 5000);
-                }, i * 150);
+                    setTimeout(() => miniTeAmo.remove(), 3000);
+                }, i * 100);
             }
 
             // Efeito de pulso na tela
@@ -1274,17 +1284,17 @@ setInterval(atualizarContador, 1000);
                 background: radial-gradient(circle, rgba(255, 0, 64, 0.1), transparent);
                 z-index: 9996;
                 pointer-events: none;
-                animation: love-pulse 2s ease-in-out;
+                animation: love-pulse 1.5s ease-in-out;
             `;
             document.body.appendChild(pulseOverlay);
-            setTimeout(() => pulseOverlay.remove(), 2000);
+            setTimeout(() => pulseOverlay.remove(), 1500);
         }
 
-        // Explosão de corações vermelhos
+        // Explosão de corações vermelhos (Quantidade reduzida de 30 para 20)
         function createHeartExplosion() {
             const hearts = ['❤️', '💖', '💕', '💗', '💓', '💝', '♥️', '💘'];
 
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 20; i++) { 
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.className = 'heart-explosion';

@@ -659,7 +659,7 @@
             pointer-events: none;
             z-index: 9999;
             font-size: 2rem;
-            animation: heart-explode 2s ease-out forwards;
+            animation: heart-explode 3s ease-out forwards; /* Alterado de 2s para 3s aqui (Base CSS) */
         }
 
         @keyframes heart-explode {
@@ -1076,7 +1076,7 @@ setInterval(atualizarContador, 1000);
 </section><footer class="footer">
 <p>Criado com todo <span class="heart-beat">❤️</span> do universo</p>
 <p>Para a pessoa mais especial do mundo! 💫</p>
-<p>Te amo, meu bem! 💑</p>
+<p>Te amo, meu bem! 👩‍❤️‍👨</p>
 </footer>
 </div>
 
@@ -1130,7 +1130,7 @@ setInterval(atualizarContador, 1000);
         // VARIÁVEL DE ESTADO DO BOTÃO
         let isButtonBlocked = false;
 
-        // Função principal da surpresa
+        // Função principal da surpresa - TEMPOS ALTERADOS AQUI
         function showSurprise() {
             // VERIFICAÇÃO SE O BOTÃO ESTÁ BLOQUEADO
             if (isButtonBlocked) {
@@ -1145,49 +1145,71 @@ setInterval(atualizarContador, 1000);
                 return;
             }
 
-            // BLOQUEIA O BOTÃO
+            // BLOQUEIA O BOTÃO E AUMENTA O TEMPO DE BLOQUEIO PARA MAIOR SUAVIZAÇÃO DA ANIMAÇÃO
             isButtonBlocked = true;
             const surpriseBtn = document.querySelector('.surprise-btn');
             surpriseBtn.classList.add('disabled');
             
-            // DESBLOQUEIA O BOTÃO APÓS 3 SEGUNDOS (MENOS QUE ANTES PARA MAIOR FLUIDEZ)
+            // DESBLOQUEIA O BOTÃO APÓS 5 SEGUNDOS (AUMENTADO DE 3s PARA 5s)
             setTimeout(() => {
                 isButtonBlocked = false;
                 surpriseBtn.classList.remove('disabled');
-            }, 3000); // Alterado de 5500ms para 3000ms
+            }, 5000); 
 
             const message = document.getElementById('specialMessage');
             message.classList.add('show');
 
-            // Explosão de corações vermelhos
-            createHeartExplosion();
+            // Explosão de corações vermelhos (CHAMA COM TEMPOS MAIS LENTOS)
+            createHeartExplosion(20, 150, 3000); // 20 corações, 150ms de intervalo (era 100ms), 3s de duração (era 2s)
 
-            // NOVA FUNÇÃO: Animação épica "TE AMO"
-            createTeAmoAnimation();
+            // Animação épica "TE AMO" (CHAMA COM TEMPOS MAIS LENTOS)
+            createTeAmoAnimation(5000); // 5s de duração para a animação principal (era 3s)
 
             // Vibração
             if (navigator.vibrate) {
                 navigator.vibrate([100, 50, 100, 50, 200]); // Vibração mais rápida
             }
 
-            // Mudança temporária da cor de fundo (tempo reduzido)
+            // Mudança temporária da cor de fundo (tempo aumentado)
             document.body.style.background = 'linear-gradient(135deg, #ff0040, #990026, #000000, #ff1744)';
             document.body.style.backgroundSize = '400% 400%';
-            document.body.style.animation = 'gradient-shift 1.5s ease infinite';
+            document.body.style.animation = 'gradient-shift 3s ease infinite'; // 3s de duração (era 1.5s)
 
             setTimeout(() => {
                 document.body.style.background = 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a0a0a 100%)';
                 document.body.style.animation = '';
-            }, 3000); // Alterado de 4000ms para 3000ms
+            }, 5000); // AUMENTADO: Espera o fundo voltar após 5s (era 3s)
 
-            // Criar mais partículas especiais (quantidade reduzida)
-            for (let i = 0; i < 30; i++) { // Alterado de 50 para 30
-                setTimeout(() => createParticle(), i * 50);
+            // Criar mais partículas especiais (quantidade reduzida de 30 para 20 e intervalo aumentado de 50ms para 150ms)
+            for (let i = 0; i < 20; i++) { 
+                setTimeout(() => createParticle(), i * 150); 
             }
         }
 
-        // NOVA FUNÇÃO: Animação épica "TE AMO"
-        function createTeAmoAnimation() {
+        // NOVA FUNÇÃO: Explosão de corações vermelhos (REFATORADA PARA PARÂMETROS)
+        function createHeartExplosion(count, interval, duration) {
+            const hearts = ['❤️', '💖', '💕', '💗', '💓', '💝', '♥️', '💘'];
+            const animationDuration = duration / 1000; // Conversão para segundos
+
+            for (let i = 0; i < count; i++) { 
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-explosion';
+                    heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * window.innerWidth + 'px';
+                    heart.style.top = Math.random() * window.innerHeight + 'px';
+                    heart.style.color = Math.random() > 0.5 ? '#ff0040' : '#ffd700';
+                    heart.style.animationDuration = animationDuration + 's'; // Aplicando nova duração
+                    document.body.appendChild(heart);
+
+                    setTimeout(() => heart.remove(), duration); // Tempo de remoção igual à duração
+                }, i * interval); // Aplicando novo intervalo
+            }
+        }
+
+
+        // NOVA FUNÇÃO: Animação épica "TE AMO" (REFATORADA PARA PARÂMETROS)
+        function createTeAmoAnimation(mainDuration) {
             // Criar múltiplas animações "TE AMO"
             const teAmoTexts = [
                 'TE AMO ❤️',
@@ -1200,7 +1222,7 @@ setInterval(atualizarContador, 1000);
                 '🥰 TE AMO DEMAIS 🥰'
             ];
 
-            // Animação central principal
+            // Animação central principal (DURAÇÃO AUMENTADA)
             const mainTeAmo = document.createElement('div');
             mainTeAmo.innerHTML = 'TE AMO ❤️';
             mainTeAmo.style.cssText = `
@@ -1217,15 +1239,18 @@ setInterval(atualizarContador, 1000);
                 background-clip: text;
                 z-index: 9999;
                 pointer-events: none;
-                animation: te-amo-main 3s ease-out forwards;
+                animation: te-amo-main 5s ease-out forwards; /* Duração aumentada de 3s para 5s */
                 text-shadow: 0 0 30px rgba(255, 0, 64, 0.8);
                 filter: drop-shadow(0 0 20px rgba(255, 0, 64, 1));
             `;
             document.body.appendChild(mainTeAmo);
-            setTimeout(() => mainTeAmo.remove(), 3000);
+            setTimeout(() => mainTeAmo.remove(), mainDuration); // Remove após 5s
 
-            // Múltiplos "TE AMO" flutuantes (Quantidade reduzida de 8 para 5)
-            for (let i = 0; i < 5; i++) { 
+            // Múltiplos "TE AMO" flutuantes (DURAÇÃO AUMENTADA E INTERVALO OTIMIZADO)
+            const numFloaters = 5; 
+            const floaterInterval = 200; // Aumentado de 150ms para 200ms
+            const floaterDuration = 4000; // Aumentado de 2500ms para 4000ms
+            for (let i = 0; i < numFloaters; i++) { 
                 setTimeout(() => {
                     const teAmo = document.createElement('div');
                     const randomText = teAmoTexts[Math.floor(Math.random() * teAmoTexts.length)];
@@ -1243,17 +1268,20 @@ setInterval(atualizarContador, 1000);
                         color: ${Math.random() > 0.5 ? '#ff0040' : '#ffd700'};
                         z-index: 9998;
                         pointer-events: none;
-                        animation: te-amo-float 2.5s ease-out forwards;
+                        animation: te-amo-float ${floaterDuration/1000}s ease-out forwards; /* Duração dinâmica */
                         text-shadow: 0 0 15px rgba(255, 0, 64, 0.8);
                         filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
                     `;
                     document.body.appendChild(teAmo);
-                    setTimeout(() => teAmo.remove(), 2500);
-                }, i * 150);
+                    setTimeout(() => teAmo.remove(), floaterDuration);
+                }, i * floaterInterval);
             }
 
-            // Chuva de "TE AMO" pequenos (Quantidade reduzida de 15 para 10)
-            for (let i = 0; i < 10; i++) { 
+            // Chuva de "TE AMO" pequenos (QUANTIDADE REDUZIDA E INTERVALO AUMENTADO)
+            const numRain = 5; // Reduzido de 10 para 5
+            const rainInterval = 250; // Aumentado de 100ms para 250ms
+            const rainDuration = 4; // Duração base aumentada para 4s
+            for (let i = 0; i < numRain; i++) { 
                 setTimeout(() => {
                     const miniTeAmo = document.createElement('div');
                     miniTeAmo.innerHTML = '💖 TE AMO';
@@ -1265,15 +1293,15 @@ setInterval(atualizarContador, 1000);
                         color: #ff0040;
                         z-index: 9997;
                         pointer-events: none;
-                        animation: te-amo-rain ${Math.random() * 2 + 1.5}s linear forwards;
+                        animation: te-amo-rain ${Math.random() * 1 + rainDuration}s linear forwards;
                         text-shadow: 0 0 10px rgba(255, 0, 64, 0.6);
                     `;
                     document.body.appendChild(miniTeAmo);
-                    setTimeout(() => miniTeAmo.remove(), 3000);
-                }, i * 100);
+                    setTimeout(() => miniTeAmo.remove(), (rainDuration + 1) * 1000); // Tempo de remoção maior
+                }, i * rainInterval);
             }
 
-            // Efeito de pulso na tela
+            // Efeito de pulso na tela (DURAÇÃO AUMENTADA)
             const pulseOverlay = document.createElement('div');
             pulseOverlay.style.cssText = `
                 position: fixed;
@@ -1284,29 +1312,10 @@ setInterval(atualizarContador, 1000);
                 background: radial-gradient(circle, rgba(255, 0, 64, 0.1), transparent);
                 z-index: 9996;
                 pointer-events: none;
-                animation: love-pulse 1.5s ease-in-out;
+                animation: love-pulse 3s ease-in-out; /* Duração aumentada de 1.5s para 3s */
             `;
             document.body.appendChild(pulseOverlay);
-            setTimeout(() => pulseOverlay.remove(), 1500);
-        }
-
-        // Explosão de corações vermelhos (Quantidade reduzida de 30 para 20)
-        function createHeartExplosion() {
-            const hearts = ['❤️', '💖', '💕', '💗', '💓', '💝', '♥️', '💘'];
-
-            for (let i = 0; i < 20; i++) { 
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart-explosion';
-                    heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
-                    heart.style.left = Math.random() * window.innerWidth + 'px';
-                    heart.style.top = Math.random() * window.innerHeight + 'px';
-                    heart.style.color = Math.random() > 0.5 ? '#ff0040' : '#ffd700';
-                    document.body.appendChild(heart);
-
-                    setTimeout(() => heart.remove(), 2000);
-                }, i * 100);
-            }
+            setTimeout(() => pulseOverlay.remove(), 3000);
         }
 
         // Easter egg: triplo clique
@@ -1314,13 +1323,18 @@ setInterval(atualizarContador, 1000);
         let clickTimer;
 
         document.addEventListener('click', (e) => {
-            //clickCount++;
+            // Se o botão de surpresa estiver ativo, não conta
+            if (e.target.classList.contains('surprise-btn') || isButtonBlocked) {
+                return;
+            }
+
+            clickCount++;
             clearTimeout(clickTimer);
 
             if (clickCount === 3) {
                 // Ativação do modo ultra dark
                 document.body.style.filter = 'hue-rotate(30deg) saturate(1.8) brightness(1.2)';
-                createHeartExplosion();
+                createHeartExplosion(15, 100, 2000); // Explosão menor e mais rápida para o Easter Egg
 
                 // Criar texto flutuante
                 const text = document.createElement('div');
@@ -1338,7 +1352,7 @@ setInterval(atualizarContador, 1000);
                     background-clip: text;
                     z-index: 9999;
                     pointer-events: none;
-                    animation: ultra-text 3s ease-out forwards;
+                    animation: ultra-text 4s ease-out forwards; /* Duração aumentada de 3s para 4s */
                     text-shadow: 0 0 20px rgba(255, 0, 64, 0.8);
                 `;
                 document.body.appendChild(text);
@@ -1346,7 +1360,7 @@ setInterval(atualizarContador, 1000);
                 setTimeout(() => {
                     text.remove();
                     document.body.style.filter = '';
-                }, 3000);
+                }, 4000);
 
                 clickCount = 0;
             } else {
@@ -1367,11 +1381,11 @@ setInterval(atualizarContador, 1000);
                 border-radius: 50%;
                 pointer-events: none;
                 z-index: 9999;
-                animation: ripple-effect 0.8s ease-out forwards;
+                animation: ripple-effect 1s ease-out forwards; /* Duração aumentada de 0.8s para 1s */
                 box-shadow: 0 0 20px rgba(255, 0, 64, 0.6);
             `;
             document.body.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 800);
+            setTimeout(() => ripple.remove(), 1000);
         });
 
         // Efeito parallax 3D no mouse
@@ -1381,25 +1395,26 @@ setInterval(atualizarContador, 1000);
             const mouseY = e.clientY / window.innerHeight;
 
             cards.forEach((card, index) => {
-                const speed = (index + 1) * 0.02;
-                const x = (mouseX - 0.5) * 15 * speed;
-                const y = (mouseY - 0.5) * 15 * speed;
+                const speed = (index + 1) * 0.01; // Reduzida a velocidade de 0.02 para 0.01
+                const x = (mouseX - 0.5) * 10 * speed; // Reduzida a intensidade de 15 para 10
+                const y = (mouseY - 0.5) * 10 * speed;
 
-                card.style.transform += ` translate3d(${x}px, ${y}px, 0)`;
+                // Uso de translate3d para melhor desempenho
+                card.style.transform = `translate3d(${x}px, ${y}px, 0)`;
             });
         });
 
         // Efeito de scroll suave
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
-            const rate = scrolled * -0.3;
+            const rate = scrolled * -0.2; // Reduzida a intensidade de -0.3 para -0.2
 
             document.querySelector('.wave-bg').style.transform = `translateY(${rate}px) scale(1.1)`;
 
             // Parallax das partículas
             const particles = document.querySelectorAll('.particle');
             particles.forEach((particle, index) => {
-                const speed = (index % 3 + 1) * 0.1;
+                const speed = (index % 3 + 1) * 0.05; // Reduzida a velocidade de 0.1 para 0.05
                 particle.style.transform += ` translateY(${scrolled * speed}px)`;
             });
         });
@@ -1432,17 +1447,17 @@ setInterval(atualizarContador, 1000);
                 font-weight: 600;
                 z-index: 9999;
                 box-shadow: 0 10px 30px rgba(255, 0, 64, 0.4);
-                animation: notification-slide 4s ease-in-out forwards;
+                animation: notification-slide 6s ease-in-out forwards; /* Duração aumentada de 4s para 6s */
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(255, 0, 64, 0.3);
             `;
 
             document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 4000);
+            setTimeout(() => notification.remove(), 6000);
         }
 
-        // Mostrar notificações aleatórias
-        setInterval(showNotification, 18000);
+        // Mostrar notificações aleatórias (Intervalo AUMENTADO)
+        setInterval(showNotification, 25000); // Aumentado de 18s para 25s
 
         // Sistema de música ambiente visual (dark theme)
         function createSoundWave() {
@@ -1455,7 +1470,7 @@ setInterval(atualizarContador, 1000);
                 height: ${Math.random() * 50 + 10}px;
                 background: linear-gradient(to top, #ff0040, #ffd700);
                 border-radius: 2px;
-                animation: sound-wave 0.5s ease-in-out infinite alternate;
+                animation: sound-wave 0.8s ease-in-out infinite alternate; /* Duração aumentada de 0.5s para 0.8s */
                 margin-right: 2px;
                 box-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
             `;
@@ -1482,8 +1497,8 @@ setInterval(atualizarContador, 1000);
             return container;
         }
 
-        // Ativar visualizador de som
-        setInterval(createSoundWave, 150);
+        // Ativar visualizador de som (Intervalo AUMENTADO)
+        setInterval(createSoundWave, 250); // Aumentado de 150ms para 250ms
 
         // Sistema de conquistas (easter eggs)
         let achievements = {
@@ -1539,13 +1554,13 @@ setInterval(atualizarContador, 1000);
                 text-align: center;
                 z-index: 9999;
                 box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-                animation: achievement-popup 3s ease-in-out forwards;
+                animation: achievement-popup 4s ease-in-out forwards; /* Duração aumentada de 3s para 4s */
                 backdrop-filter: blur(10px);
                 border: 2px solid rgba(255, 0, 64, 0.3);
             `;
 
             document.body.appendChild(achievement);
-            setTimeout(() => achievement.remove(), 3000);
+            setTimeout(() => achievement.remove(), 4000);
         }
 
         // Observador de interseção para animações
@@ -1621,7 +1636,7 @@ setInterval(atualizarContador, 1000);
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         });
 
-        // Adicionar CSS para animações extras
+        // Adicionar CSS para animações extras (ALTERANDO DURAÇÕES)
         const extraStyles = document.createElement('style');
         extraStyles.textContent = `
             @keyframes ultra-text {
@@ -1670,7 +1685,42 @@ setInterval(atualizarContador, 1000);
                 100% { height: 50px; }
             }
 
-            @keyframes te-amo-main {
+            @keyframes achievement-popup {
+                0% {
+                    opacity: 0;
+                    transform: translate(-50%, -50%) scale(0.8);
+                }
+                25% {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1.1);
+                }
+                75% {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translate(-50%, -50%) scale(0.8);
+                }
+            }
+
+            /* ANIMAÇÕES PRINCIPAIS DE SURPRESA COM DURAÇÃO MAIOR */
+            @keyframes heart-explode { 
+                0% {
+                    transform: scale(0) rotate(0deg);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.5) rotate(180deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(0.5) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes te-amo-main { /* Duração aumentada de 3s para 5s */
                 0% {
                     opacity: 0;
                     transform: translate(-50%, -50%) scale(0) rotate(0deg);
@@ -1700,7 +1750,7 @@ setInterval(atualizarContador, 1000);
                 }
             }
 
-            @keyframes te-amo-float {
+            @keyframes te-amo-float { /* Duração aumentada de 2.5s para 4s */
                 0% {
                     opacity: 0;
                     transform: scale(0) rotate(0deg);
@@ -1742,7 +1792,7 @@ setInterval(atualizarContador, 1000);
                 }
             }
 
-            @keyframes love-pulse {
+            @keyframes love-pulse { /* Duração aumentada de 1.5s para 3s */
                 0% {
                     opacity: 0;
                     transform: scale(0.8);
@@ -1756,6 +1806,7 @@ setInterval(atualizarContador, 1000);
                     transform: scale(1.5);
                 }
             }
+            /* FIM DAS ANIMAÇÕES PRINCIPAIS DE SURPRESA */
 
             .animate-in {
                 animation: slideUp 0.8s ease-out forwards;
